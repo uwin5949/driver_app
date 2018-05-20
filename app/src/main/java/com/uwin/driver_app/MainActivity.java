@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         //-----------------------------------------
         Log.d(TAG, "OnChanged Location "+location.getLatitude()+" "+location.getLongitude());
-
     }
 
     private boolean checkLocation() {
@@ -81,91 +80,87 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
 
     private boolean isLocationEnabled() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                        locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-            if (ActivityCompat.checkSelfPermission(this,
-                            android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                            ActivityCompat.checkSelfPermission(this,
-                                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                            //    ActivityCompat#requestPermissions
-                                    // here to request the missing permissions, and then overriding
-                                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                                    //                                          int[] grantResults)
-                                                            // to handle the case where the user grants the permission. See the documentation
-                                                                    // for ActivityCompat#requestPermissions for more details.
-                                                                            return;
-                }
-
-                    startLocationUpdates();
-
-                    mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-                    if(mLocation == null){
-                    startLocationUpdates();
-                }
-            if (mLocation != null) {
-//-----------------------------------------
-                Log.d(TAG, "Onconnected Location "+mLocation.getLatitude()+" "+mLocation.getLongitude());
-            }
-            else{
-                Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
-            }
+        if (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(this,
+                                        android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
+        startLocationUpdates();
+        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if(mLocation == null){
+        startLocationUpdates();
+        }
+        if (mLocation != null) {
+//-----------------------------------------
+            Log.d(TAG, "Onconnected Location "+mLocation.getLatitude()+" "+mLocation.getLongitude());
+        }
+        else{
+            Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
+        }
+}
 
     @Override
     public void onConnectionSuspended(int i) {
-            Log.i(TAG, "Connection Suspended");
-            mGoogleApiClient.connect();
-        }
+        Log.i(TAG, "Connection Suspended");
+        mGoogleApiClient.connect();
+    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-            Log.i(TAG, "Connection failed. Error: " + connectionResult.getErrorCode());
-        }
+        Log.i(TAG, "Connection failed. Error: " + connectionResult.getErrorCode());
+    }
 
     @Override
     protected void onStart() {
-            super.onStart();
-            if (mGoogleApiClient != null) {
-                    mGoogleApiClient.connect();
-                }
+        super.onStart();
+        if (mGoogleApiClient != null) {
+                mGoogleApiClient.connect();
         }
+    }
 
     @Override
     protected void onStop() {
-            super.onStop();
-            if (mGoogleApiClient.isConnected()) {
-                    mGoogleApiClient.disconnect();
-                }
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.disconnect();
         }
+    }
 
-        protected void startLocationUpdates() {
-            // Create the location request
-                    mLocationRequest = LocationRequest.create()
-                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                            .setInterval(UPDATE_INTERVAL)
-                            .setFastestInterval(FASTEST_INTERVAL);
-            // Request location updates
-                    if (ActivityCompat.checkSelfPermission(this,
-                            android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                            ActivityCompat.checkSelfPermission(this,
-                                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                            //    ActivityCompat#requestPermissions
-                                    // here to request the missing permissions, and then overriding
-                                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                                    //                                          int[] grantResults)
-                                                            // to handle the case where the user grants the permission. See the documentation
-                                                                    // for ActivityCompat#requestPermissions for more details.
-                                                                            return;
-                }
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
-                            mLocationRequest, this);
-            Log.d("reque", "--->>>>");
+    protected void startLocationUpdates() {
+        // Create the location request
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(UPDATE_INTERVAL)
+                .setFastestInterval(FASTEST_INTERVAL);
+        // Request location updates
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,
+                                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        Log.d("reque", "--->>>>");
+    }
 }
